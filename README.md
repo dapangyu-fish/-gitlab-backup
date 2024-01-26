@@ -29,3 +29,10 @@ rpool/USERDATA/zhaoyihuan_mfubfx  590G  296G  295G  51% /home/zhaoyihuan
 expor GITLAB_HOME=/home/zhaoyihuan/gitlab-ee
 docker run --detach --net=fish-net --ip=192.168.111.240 --hostname git.dapangyu.work --publish 6443:443 --publish 680:80 --publish 622:22 --name gitlab-ee --restart always --volume $GITLAB_HOME/config:/etc/gitlab --volume $GITLAB_HOME/logs:/var/log/gitlab --volume $GITLAB_HOME/data:/var/opt/gitlab --volume $GITLAB_HOME/data:/var/opt/gitlab --shm-size 4096m  --add-host=git.dapangyu.work:192.168.111.240  --add-host=git-standby.dapangyu.work:192.168.111.241  gitlab/gitlab-ee:16.8.1-ee.0
 ```
+
+# 使用方法
+- 将create_gitlab_backup_snapshots.sh 加入到crontab 中即可，需要root用户编辑crontab
+```
+zhaoyihuan@fish-server-01 ~ [1]> sudo crontab -l                                                                              (base)
+0 0 * * * /bin/bash /home/zhaoyihuan/create_gitlab_backup_snapshots.sh
+```
