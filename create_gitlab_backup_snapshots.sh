@@ -6,14 +6,11 @@ DATASET="rpool/USERDATA/zhaoyihuan_mfubfx"
 MOUNT_BASE="/mnt/zfs_snapshot"
 
 remove_gitlab_container() {
-    # 检查容器是否存在
     if docker ps -a | grep -q gitlab-ee-n-1; then
-        # 如果容器存在，则删除它
         docker rm -f gitlab-ee-n-1
-        echo "已删除 GitLab 容器 gitlab-ee-n-1"
+        echo "rm container gitlab-ee-n-1 success"
     else
-        # 如果容器不存在，则输出消息并跳过删除操作
-        echo "GitLab 容器 gitlab-ee-n-1 不存在，无需删除"
+        echo "rm container gitlab-ee-n-1 skiped"
     fi
 }
 
