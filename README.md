@@ -1,5 +1,5 @@
 # gitlab-backup
-实现n-1天的gitlab备份
+简介：可实现n-1天的gitlab备份，利用zfs快照特性,从删除旧的gitlab实例到新的gitlab启动，整个过程通常仅需5分钟左右。
 
 ## 先决条件
 - Docker
