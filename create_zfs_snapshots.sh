@@ -5,6 +5,21 @@ DATASET="rpool/USERDATA/zhaoyihuan_mfubfx"
 # Base path for mount points
 MOUNT_BASE="/mnt/zfs_snapshot"
 
+remove_gitlab_container() {
+    docker rm -f gitlab-ee-n-1
+}
+
+run_gitlab_container() {
+    # 使用`date`命令动态设置当前日期
+    GITLAB_HOME="/mnt/zfs_snapshot_$(date +%Y_%m_%d)/gitlab-ee"
+    
+    # 导出GITLAB_HOME环境变量，以便在Docker命令中使用
+    export GITLAB_HOME
+
+    # 运行GitLab EE Docker容器
+    docker run --detach --net=fish-net --ip=192.168.111.242 --hostname git-n-1.dapangyu.work --publish 6443:443 --publish 680:80 --publish 622:22 --name gitlab-ee-n-1 --restart always --volume $GITLAB_HOME/config:/etc/gitlab --volume $GITLAB_HOME/logs:/var/log/gitlab --volume $GITLAB_HOME/data:/var/opt/gitlab --volume $GITLAB_HOME/license/license.rb:/opt/gitlab/embedded/service/gitlab-rails/ee/app/models/license.rb --volume $GITLAB_HOME/license/.license_encryption_key.pub:/opt/gitlab/embedded/service/gitlab-rails/.license_encryption_key.pub --shm-size 4096m --add-host=version.gitlab.com:127.0.0.1 --add-host=version.gitlab.cn:127.0.0.1 --add-host=git-n-1.dapangyu.work:192.168.111.242 --add-host=git-1.dapangyu.work:192.168.111.240 --add-host=git-standby.dapangyu.work:192.168.111.241 gitlab/gitlab-ee:16.8.1-ee.0
+}
+
 # Function to create a snapshot with timestamp
 create_snapshot() {
     local timestamp=$(date +%Y_%m_%d)
@@ -60,6 +75,8 @@ cleanup_old_snapshots() {
 }
 
 # Main execution
+remove_gitlab_container
 create_snapshot
 clone_and_mount
 cleanup_old_snapshots
+run_gitlab_container
